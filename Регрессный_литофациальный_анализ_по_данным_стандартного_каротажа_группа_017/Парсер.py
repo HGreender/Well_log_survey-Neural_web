@@ -1,7 +1,7 @@
 import pandas as pd
 import lasio
 import glob
-from sklearn.preprocessing import MinMaxScaler
+
 # загрузка данных из файлов LAS
 PS = lasio.read('PS.LAS')
 PZ = lasio.read('PZ.LAS')
@@ -43,6 +43,13 @@ ds = DS['DEPT'], DS['DS']
 ds_df = pd.DataFrame(ds).T
 ds_df.columns = ['DEPT', 'DS']
 
+# # Сдвиг данных построчно
+# ps_df['DEPT'] = ps_df['DEPT'] - 0.1
+# pz_df['DEPT'] = pz_df['DEPT'] - 0.1
+gk_df['DEPT'] = gk_df['DEPT'] - 0.1
+# ngk_df['DEPT'] = ngk_df['DEPT'] - 0.1
+ds_df['DEPT'] = ds_df['DEPT'] - 0.1
+
 # Объединяем все DataFrame'ы по столбцу DEPT
 merged_df1 = pd.merge(DEPT_df, ps_df, on='DEPT', how='left')
 merged_df2 = pd.merge(merged_df1, pz_df, on='DEPT', how='left')
@@ -76,9 +83,8 @@ for index, row in df2.iterrows():
         df2 = df2.drop(index)
 
 print(df2)
-scaler = MinMaxScaler()
-df2[['PZ']] = scaler.fit_transform(df2[['PZ']])
-print(df2[['PZ']].values)
 
-# # Сохраняем итоговую таблицу
-# df2.to_csv('{}.csv'.format(df1.loc[1,'N_СКВ']), index=False)
+# Сохраняем итоговую таблицу
+print('Сохранение в {}.csv ...'.format(df1.loc[1,'N_СКВ']))
+df2.to_csv('{}.csv'.format(df1.loc[1,'N_СКВ']), index=False)
+print('Сохранение завершено')
